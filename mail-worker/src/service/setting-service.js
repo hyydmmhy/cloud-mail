@@ -100,7 +100,9 @@ const settingService = {
 
 		settingRow.s3AccessKey = settingRow.s3AccessKey ? `${settingRow.s3AccessKey.slice(0, 12)}******` : null;
 		settingRow.s3SecretKey = settingRow.s3SecretKey ? `${settingRow.s3SecretKey.slice(0, 12)}******` : null;
+		settingRow.tgBotToken = settingRow.tgBotToken ? `${settingRow.tgBotToken.slice(0, 20)}******` : null;
 		settingRow.hasR2 = !!c.env.r2
+		settingRow.hasCfEmail = !!c.env.email
 
 		let regVerifyOpen = false
 		let addVerifyOpen = false
@@ -131,6 +133,15 @@ const settingService = {
 
 		if (Array.isArray(params.emailPrefixFilter)) {
 			params.emailPrefixFilter = params.emailPrefixFilter + '';
+		}
+
+		if (Array.isArray(params.aiCodeFilter)) {
+			params.aiCodeFilter = params.aiCodeFilter + '';
+		}
+
+		if (params.loginDarkenFactor !== undefined) {
+			const factor = Number(params.loginDarkenFactor);
+			params.loginDarkenFactor = Number.isNaN(factor) ? 0 : Math.min(1, Math.max(0, factor));
 		}
 
 		params.resendTokens = JSON.stringify(resendTokens);
@@ -209,6 +220,7 @@ const settingService = {
 			siteKey: settingRow.siteKey,
 			background: settingRow.background,
 			loginOpacity: settingRow.loginOpacity,
+			loginDarkenFactor: settingRow.loginDarkenFactor,
 			domainList: settingRow.loginDomain === 1 && !token ? [] : settingRow.domainList,
 			regKey: settingRow.regKey,
 			regVerifyOpen: settingRow.regVerifyOpen,
